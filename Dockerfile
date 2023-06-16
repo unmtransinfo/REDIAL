@@ -74,6 +74,6 @@ COPY mayachemtools ./mayachemtools
 
 EXPOSE 8000
 # For webapp
-# CMD flask run --host=0.0.0.0 --port=8000
-ENTRYPOINT ["python3", "app.py"]
+CMD flask run --host=0.0.0.0 --port=8000
+# ENTRYPOINT ["python3", "app.py"]
 # EXPOSE 8000
