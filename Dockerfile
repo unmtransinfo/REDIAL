@@ -74,4 +74,4 @@ COPY mayachemtools ./mayachemtools
 
 # For webapp
 ENTRYPOINT ["python3", "app.py"]
-EXPOSE 5000
+EXPOSE 8000
