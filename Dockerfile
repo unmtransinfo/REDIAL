@@ -73,5 +73,6 @@ COPY smi_dict_all_updated_mpro37.pkl drug_central_drugs-stand.csv run_script.py 
 COPY mayachemtools ./mayachemtools
 
 # For webapp
-ENTRYPOINT ["python3", "app.py"]
+CMD flask run --host=0.0.0.0 --port=8000
+# ENTRYPOINT ["python3", "app.py"]
 EXPOSE 8000
