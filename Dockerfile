@@ -58,7 +58,7 @@ MAINTAINER Srijan Verma<vermasrijan44@gmail.com>
 #     cd xgboost && \
 #     mkdir build && \
 #     cd build && \
-#     cmake .. && \
+#     cmake .. && \ 
 #     make -j$(nproc)
 
 COPY requirements.txt .
@@ -72,7 +72,8 @@ COPY scalers ./scalers
 COPY smi_dict_all_updated_mpro37.pkl drug_central_drugs-stand.csv run_script.py config.py app.py alogps-linux logp.bin logs.bin ./
 COPY mayachemtools ./mayachemtools
 
-# For webapp
-CMD flask run --host=0.0.0.0 --port=8000
-# ENTRYPOINT ["python3", "app.py"]
 EXPOSE 8000
+# For webapp
+# CMD flask run --host=0.0.0.0 --port=8000
+ENTRYPOINT ["python3", "app.py"]
+# EXPOSE 8000
