@@ -43,6 +43,11 @@ import rdkit, shutil
 from rdkit.Chem import SmilesMolSupplier, SDMolSupplier, SDWriter, SmilesWriter, MolStandardize, MolToSmiles, MolFromSmiles
 import tempfile
 
+from singleton import Singleton
+from urllib.request import urlopen
+from S3Downloader import S3Downloader
+
+
 pubchem_time_limit = 30  # in seconds
 
 ochem_api_time_limit = 20 # in seconds
@@ -113,15 +118,15 @@ def preprocess_smi(smi):
     except:
         return None
 
-class Similarity:
+class Similarity(metaclass=Singleton):
 
     def calculate_fp(self, fp_name, smiles):
         m = Chem.MolFromSmiles(smiles)
         return fpFunc_dict[fp_name](m)
 
-    def load_dict(self, path):
-        with open(path, 'rb') as file:
-            _dict = pickle.load(file)
+    def load_dict(self, file):
+        # with open(path, 'rb') as file:
+        _dict = pickle.loads(file)
         return _dict
 
     def multiprocess_find_similarity(self, _query_fp, _ref_fp, _ref_smi):
@@ -163,8 +168,8 @@ class Similarity:
 
         # Else, fp is calculated. continue -->
         else:
-
-            smi_all_dict = self.load_dict('smi_dict_all_updated_mpro37.pkl')
+            s3_downloader = S3Downloader()
+            smi_all_dict = self.load_dict(s3_downloader.smi_all_dict)
 
             final_query_ref_dict = {}
             ref_smi_list = list(smi_all_dict.keys())
@@ -196,7 +201,11 @@ class Similarity:
             return similarity_dict
 
 
-class Predict:
+class Predict(metaclass=Singleton):
+    def __init__(self) -> None:
+        self.s3_downloader = S3Downloader()
+        self.load_model()
+
     ##############################<TEST THE MODEL>#################################################
     def model_testing(self, opt, X_test, mod, target):
 
@@ -207,7 +216,9 @@ class Predict:
 
             # Loading rdkDes scaler
             # print("SCALER LOADED: ", target)
-            rdkDes_scaler = pickle.load(open('scalers/' + target + '-rdkDes_scaler.pkl', 'rb'))
+            model = self.s3_downloader.get_scalers['scalers' + target + '-rdkDes_scaler.pkl']
+            print("model", model)
+            rdkDes_scaler = pickle.loads(model)
 
             X = rdkDes_scaler.transform(X_test)
 
@@ -236,14 +247,13 @@ class Predict:
     ##############################################################################################################################
 
     ##########################----LOAD THE MODEL----#####################################
-    def load_model(self, model_file):
+    def load_model(self):
+        all_mod_files = self.s3_downloader.get_models()
 
-        target_fp_mod = os.path.splitext(os.path.basename(model_file))[0][0:-5]
-
-        with open(model_file, 'rb') as file:
-            opt = pickle.load(file)
-
-        ModFileName_LoadedModel_dict[target_fp_mod] = opt
+        for model_file in all_mod_files:
+            target_fp_mod = os.path.splitext(os.path.basename(model_file[1]))[0][0:-5]
+            opt = pickle.loads(model_file[0])
+            ModFileName_LoadedModel_dict[target_fp_mod] = opt
 
     ######################################################################################################
 
@@ -337,12 +347,12 @@ class Predict:
 
     def model_initialization(self, smi_list):
         dict_all = {}
-
-        all_mod_files = sorted(glob('saved_models/*.pkl'))
-
-        # Loop over and Load all models in memory and store in a dict--> key = model_file_name ; value = model
-        for i in range(len(all_mod_files)):
-            self.load_model(all_mod_files[i])
+        # get_dir("saved_models")
+        # all_mod_files = sorted(glob('saved_models/*.pkl'))
+        # all_mod_files = sorted(get_dir_objs("saved_models"))
+        # # Loop over and Load all models in memory and store in a dict--> key = model_file_name ; value = model
+        # for i in range(len(all_mod_files)):
+        #     self.load_model(all_mod_files[i])
 
         # Use all CORES
         pool = mp.Pool(mp.cpu_count())
@@ -575,7 +585,6 @@ class FetchChemoDB:
             return '-', '-'
 
         # Read csv
-        #df = pd.read_csv('drug_central_drugs.csv')
         df = pd.read_csv('drug_central_drugs-stand.csv')
         ### added by GK ###
         dc_dictn = dict(zip(df.ID, df.INN_cleaned))

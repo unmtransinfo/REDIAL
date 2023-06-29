@@ -15,6 +15,8 @@ import numpy as np
 from rdkit import Chem
 from rdkit.Chem import AllChem, Descriptors
 
+# from S3Downloader import S3Downloader
+
 # RDKit descriptors -->
 calc = MoleculeDescriptors.MolecularDescriptorCalculator([x[0] for x in Descriptors._descList])
 
@@ -33,9 +35,14 @@ def get_tpatf(m):
     w.flush()
 
     try:
-        # Path to perl script
+        # s3_downloader = S3Downloader()
         script_path = 'mayachemtools/bin/TopologicalPharmacophoreAtomTripletsFingerprints.pl'
+        # print(os.path.isfile(script_path))
+        # # Path to perl script
+        # if not os.path.isfile(script_path):
+        #     s3_downloader.download_file(script_path)
         command = "perl " + script_path + " -r " + os.path.join(temp_dir,"temp") + " --AtomTripletsSetSizeToUse FixedSize -v ValuesString -o " + os.path.join(temp_dir, "temp.sdf")
+        
         os.system(command)
 
         with open(os.path.join(temp_dir, "temp.csv"), 'r') as f:

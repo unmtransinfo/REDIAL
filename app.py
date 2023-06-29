@@ -20,14 +20,20 @@ import pickle
 from  collections import OrderedDict
 import pprint
 
+
 USE_OCHEM_API = False # If True, ochem API will be used for ALOGPS calculations (instead of ochem Tool)
 
 app = Flask(__name__)
 
+global p, s
+p = Predict()
+s = Similarity()
+
+# p = None
+# s = None
 
 @app.route("/")
 def home():
-
     return jsonify({'message': 'SERVER IS RUNNING'})
 
 @app.route("/predict", methods=['GET', 'POST'])
@@ -60,9 +66,10 @@ def predict():
             return jsonify(all_dict)#jsonify({'message': "SMILES ERROR", 'error': "EMPTY SMILES"})
 
         try:
-            # Below, getting attributes for using processed smiles -->
+            global p, s
             p = Predict()
             s = Similarity()
+            # Below, getting attributes for using processed smiles -->
             similarity_dict = s.model_initialization(processed_smiles, three_cl=False)
             predict_dict = p.model_initialization([processed_smiles])
             molecular_wt = FetchPhysicoProperty().get_molecular_wt(processed_smiles)
@@ -833,5 +840,5 @@ def predict():
         return jsonify(all_dict)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8000, debug = True)
-    # app.run(debug=True)
+
+    app.run(host='0.0.0.0', port=8000, debug = False)

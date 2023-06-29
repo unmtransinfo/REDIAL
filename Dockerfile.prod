@@ -1,6 +1,33 @@
 # syntax=docker/dockerfile:1
 
-FROM informaticsmatters/rdkit-python3-debian:Release_2020_03_1
+# FROM python:3.7-slim-buster 
+FROM continuumio/miniconda3
+
+RUN apt-get update --allow-releaseinfo-change && apt-get install -y libpango1.0-0 \
+    # libcairo2 \
+    # libpq-dev \
+    # python3-dev \
+    # perl \
+    # git \
+    curl \
+    # python3-sklearn \
+    # python3-sklearn-lib \
+    # python3-sklearn \
+    # cmake \
+    # gcc \
+    # libblas-dev \
+    # liblapack-dev \
+    # gfortran \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"
+RUN bash Mambaforge-$(uname)-$(uname -m).sh -b
+
+RUN conda create -n env python=3.7
+
+RUN echo "source activate env" > ~/.bashrc
+ENV PATH /opt/conda/envs/env/bin:$PATH
+
 USER ${UID}:${GID}
 
 # MAINTAINER
@@ -8,31 +35,18 @@ MAINTAINER Priyansh Kedia<kediapriyansh@gmail.com>
 
 RUN echo "${GID}"
 
-ENV DEBIAN_FRONTEND noninteractive
-
-RUN apt-get update --allow-releaseinfo-change && apt-get install -y libpango1.0-0 \
-    libcairo2 \
-    libpq-dev \
-    perl \
-    git \
-    cmake \
-    libblas-dev \
-    liblapack-dev \
-    gfortran \
-    && rm -rf /var/lib/apt/lists/*
+# ENV DEBIAN_FRONTEND noninteractive
 
 # Set environment variables
 ENV PIP_DISABLE_PIP_VERSION_CHECK 1
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
-# PIP_DISABLE_PIP_VERSION_CHECK disables an automatic check for pip updates each time
-# PYTHONDONTWRITEBYTECODE means Python will not try to write .pyc files
-# PYTHONUNBUFFERED ensures our console output is not buffered by Docker
 
 COPY requirements.txt .
-RUN pip install --upgrade pip
-RUN pip3 install -r requirements.txt
 
+# RUN conda install cython
+RUN python3 -m pip install --upgrade pip
+RUN pip install -r requirements.txt
 WORKDIR /app
 EXPOSE 8000
 

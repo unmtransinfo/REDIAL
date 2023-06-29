@@ -139,3 +139,5 @@ dmypy.json
 #ochem_alogps_tool/*
 #Dockerfile-website
 #Dockerfile-website-usage.txt
+
+.DS_Store
