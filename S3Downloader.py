@@ -12,6 +12,7 @@ BUCKET = 'redial'
 SAVED_MODELS_DIR = "saved_models"
 MAYACHEM_BIN_DIR = "mayachemtools/bin"
 SCALERS_DIR = "scalers"
+SMI_ALL_DICT_FILE_NAME = "smi_dict_all_updated_mpro37.pkl"
 script_path = 'mayachemtools/bin/TopologicalPharmacophoreAtomTripletsFingerprints.pl'
 s3 = boto3.client('s3')
 
@@ -23,7 +24,9 @@ class S3Downloader(metaclass = Singleton):
         self.models = []
         self.scaler_names = []
         self.scalers = {}
+        self.smi_all_dict = None
 
+        self.get_smi_all_dict(SMI_ALL_DICT_FILE_NAME)
         self.load_model_names()
         self.load_models()
         self.load_scaler_names()
@@ -74,5 +77,8 @@ class S3Downloader(metaclass = Singleton):
     def get_models(self):
         return self.models
     
+    def get_smi_all_dict(self, name):
+        self.smi_all_dict = self.load_obj(name)
+
     def download_file(self, key):
         s3.download_file(Bucket= BUCKET, Key = key, Filename = key)

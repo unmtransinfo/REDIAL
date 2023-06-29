@@ -124,9 +124,9 @@ class Similarity(metaclass=Singleton):
         m = Chem.MolFromSmiles(smiles)
         return fpFunc_dict[fp_name](m)
 
-    def load_dict(self, path):
-        with open(path, 'rb') as file:
-            _dict = pickle.load(file)
+    def load_dict(self, file):
+        # with open(path, 'rb') as file:
+        _dict = pickle.loads(file)
         return _dict
 
     def multiprocess_find_similarity(self, _query_fp, _ref_fp, _ref_smi):
@@ -168,8 +168,8 @@ class Similarity(metaclass=Singleton):
 
         # Else, fp is calculated. continue -->
         else:
-
-            smi_all_dict = self.load_dict('smi_dict_all_updated_mpro37.pkl')
+            s3_downloader = S3Downloader()
+            smi_all_dict = self.load_dict(s3_downloader.smi_all_dict)
 
             final_query_ref_dict = {}
             ref_smi_list = list(smi_all_dict.keys())
