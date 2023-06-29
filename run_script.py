@@ -43,6 +43,9 @@ import rdkit, shutil
 from rdkit.Chem import SmilesMolSupplier, SDMolSupplier, SDWriter, SmilesWriter, MolStandardize, MolToSmiles, MolFromSmiles
 import tempfile
 
+from s3 import get_dir, get_dir_objs, get_obj
+from singleton import Singleton
+from urllib.request import urlopen
 pubchem_time_limit = 30  # in seconds
 
 ochem_api_time_limit = 20 # in seconds
@@ -113,7 +116,7 @@ def preprocess_smi(smi):
     except:
         return None
 
-class Similarity:
+class Similarity(metaclass=Singleton):
 
     def calculate_fp(self, fp_name, smiles):
         m = Chem.MolFromSmiles(smiles)
@@ -196,7 +199,10 @@ class Similarity:
             return similarity_dict
 
 
-class Predict:
+class Predict(metaclass=Singleton):
+    def __init__(self) -> None:
+        self.load_model()
+
     ##############################<TEST THE MODEL>#################################################
     def model_testing(self, opt, X_test, mod, target):
 
@@ -207,7 +213,8 @@ class Predict:
 
             # Loading rdkDes scaler
             # print("SCALER LOADED: ", target)
-            rdkDes_scaler = pickle.load(open('scalers/' + target + '-rdkDes_scaler.pkl', 'rb'))
+            model = get_obj('scalers/' + target + '-rdkDes_scaler.pkl')
+            rdkDes_scaler = pickle.loads(model)
 
             X = rdkDes_scaler.transform(X_test)
 
@@ -236,14 +243,16 @@ class Predict:
     ##############################################################################################################################
 
     ##########################----LOAD THE MODEL----#####################################
-    def load_model(self, model_file):
+    def load_model(self):
 
-        target_fp_mod = os.path.splitext(os.path.basename(model_file))[0][0:-5]
+        all_mod_files = get_dir_objs("saved_models")
 
-        with open(model_file, 'rb') as file:
-            opt = pickle.load(file)
-
-        ModFileName_LoadedModel_dict[target_fp_mod] = opt
+        for model_file in all_mod_files:
+            
+            target_fp_mod = os.path.splitext(os.path.basename(model_file[1]))[0][0:-5]
+            print(model_file[1])
+            opt = pickle.loads(model_file[0])
+            ModFileName_LoadedModel_dict[target_fp_mod] = opt
 
     ######################################################################################################
 
@@ -337,12 +346,12 @@ class Predict:
 
     def model_initialization(self, smi_list):
         dict_all = {}
-
-        all_mod_files = sorted(glob('saved_models/*.pkl'))
-
-        # Loop over and Load all models in memory and store in a dict--> key = model_file_name ; value = model
-        for i in range(len(all_mod_files)):
-            self.load_model(all_mod_files[i])
+        # get_dir("saved_models")
+        # all_mod_files = sorted(glob('saved_models/*.pkl'))
+        # all_mod_files = sorted(get_dir_objs("saved_models"))
+        # # Loop over and Load all models in memory and store in a dict--> key = model_file_name ; value = model
+        # for i in range(len(all_mod_files)):
+        #     self.load_model(all_mod_files[i])
 
         # Use all CORES
         pool = mp.Pool(mp.cpu_count())
@@ -575,7 +584,6 @@ class FetchChemoDB:
             return '-', '-'
 
         # Read csv
-        #df = pd.read_csv('drug_central_drugs.csv')
         df = pd.read_csv('drug_central_drugs-stand.csv')
         ### added by GK ###
         dc_dictn = dict(zip(df.ID, df.INN_cleaned))
