@@ -43,9 +43,11 @@ import rdkit, shutil
 from rdkit.Chem import SmilesMolSupplier, SDMolSupplier, SDWriter, SmilesWriter, MolStandardize, MolToSmiles, MolFromSmiles
 import tempfile
 
-from s3 import get_dir, get_dir_objs, get_obj
 from singleton import Singleton
 from urllib.request import urlopen
+from S3Downloader import S3Downloader
+
+
 pubchem_time_limit = 30  # in seconds
 
 ochem_api_time_limit = 20 # in seconds
@@ -201,6 +203,7 @@ class Similarity(metaclass=Singleton):
 
 class Predict(metaclass=Singleton):
     def __init__(self) -> None:
+        self.s3_downloader = S3Downloader()
         self.load_model()
 
     ##############################<TEST THE MODEL>#################################################
@@ -213,7 +216,8 @@ class Predict(metaclass=Singleton):
 
             # Loading rdkDes scaler
             # print("SCALER LOADED: ", target)
-            model = get_obj('scalers/' + target + '-rdkDes_scaler.pkl')
+            model = self.s3_downloader.get_scalers['scalers' + target + '-rdkDes_scaler.pkl']
+            print("model", model)
             rdkDes_scaler = pickle.loads(model)
 
             X = rdkDes_scaler.transform(X_test)
@@ -244,15 +248,13 @@ class Predict(metaclass=Singleton):
 
     ##########################----LOAD THE MODEL----#####################################
     def load_model(self):
-
-        all_mod_files = get_dir_objs("saved_models")
+        all_mod_files = self.s3_downloader.get_models()
 
         for model_file in all_mod_files:
-            
             target_fp_mod = os.path.splitext(os.path.basename(model_file[1]))[0][0:-5]
-            print(model_file[1])
             opt = pickle.loads(model_file[0])
             ModFileName_LoadedModel_dict[target_fp_mod] = opt
+            print(target_fp_mod, ModFileName_LoadedModel_dict)
 
     ######################################################################################################
 

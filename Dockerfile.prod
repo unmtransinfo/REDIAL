@@ -1,23 +1,9 @@
 # syntax=docker/dockerfile:1
 
-# FROM python:3.7-slim-buster 
 FROM continuumio/miniconda3
 
 RUN apt-get update --allow-releaseinfo-change && apt-get install -y libpango1.0-0 \
-    libcairo2 \
-    libpq-dev \
-    python3-dev \
-    perl \
-    git \
     curl \
-    python3-sklearn \
-    python3-sklearn-lib \
-    python3-sklearn \
-    cmake \
-    gcc \
-    libblas-dev \
-    liblapack-dev \
-    gfortran \
     && rm -rf /var/lib/apt/lists/*
 
 RUN curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"
@@ -35,25 +21,10 @@ MAINTAINER Priyansh Kedia<kediapriyansh@gmail.com>
 
 RUN echo "${GID}"
 
-# ENV DEBIAN_FRONTEND noninteractive
-
-# Set environment variables
-ENV PIP_DISABLE_PIP_VERSION_CHECK 1
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-# PIP_DISABLE_PIP_VERSION_CHECK disables an automatic check for pip updates each time
-# PYTHONDONTWRITEBYTECODE means Python will not try to write .pyc files
-# PYTHONUNBUFFERED ensures our console output is not buffered by Docker
-
-# RUN pip install openblas
 COPY requirements.txt .
-# RUN pip3 install --upgrade pip
+
 RUN conda install cython
-# RUN conda install numpy==1.19.2
-# RUN conda install scikit-learn==0.23.2
 RUN python3 -m pip install --upgrade pip
-# RUN pip install --no-build-isolation numpy==1.19.2 scikit-learn==0.22.1
-# RUN pip install -U --no-use-pep517 numpy==1.19.2 scikit-learn==0.22.1
 RUN pip install -r requirements.txt
 WORKDIR /app
 EXPOSE 8000
@@ -63,14 +34,6 @@ COPY ./entrypoint.prod.sh /entrypoint.prod.sh
 RUN sed -i 's/\r$//g' /entrypoint.prod.sh
 RUN chmod +x /entrypoint.prod.sh
 
-# COPY saved_models ./saved_models
-# COPY static ./static
-# COPY scalers ./scalers
-# COPY smi_dict_all_updated_mpro37.pkl drug_central_drugs-stand.csv run_script.py config.py app.py alogps-linux logp.bin logs.bin s3.py ./
-# COPY mayachemtools ./mayachemtools
-
 COPY . .
-
-# COPY $HOME/.aws/credentials /root/.aws/credentials
 
 ENTRYPOINT ["/entrypoint.prod.sh"]
