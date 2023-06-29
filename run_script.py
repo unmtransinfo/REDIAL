@@ -254,7 +254,6 @@ class Predict(metaclass=Singleton):
             target_fp_mod = os.path.splitext(os.path.basename(model_file[1]))[0][0:-5]
             opt = pickle.loads(model_file[0])
             ModFileName_LoadedModel_dict[target_fp_mod] = opt
-            print(target_fp_mod, ModFileName_LoadedModel_dict)
 
     ######################################################################################################
 

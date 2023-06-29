@@ -1,9 +1,23 @@
 # syntax=docker/dockerfile:1
 
+# FROM python:3.7-slim-buster 
 FROM continuumio/miniconda3
 
 RUN apt-get update --allow-releaseinfo-change && apt-get install -y libpango1.0-0 \
+    # libcairo2 \
+    # libpq-dev \
+    # python3-dev \
+    # perl \
+    # git \
     curl \
+    # python3-sklearn \
+    # python3-sklearn-lib \
+    # python3-sklearn \
+    # cmake \
+    # gcc \
+    # libblas-dev \
+    # liblapack-dev \
+    gfortran \
     && rm -rf /var/lib/apt/lists/*
 
 RUN curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"
@@ -20,6 +34,13 @@ USER ${UID}:${GID}
 MAINTAINER Priyansh Kedia<kediapriyansh@gmail.com>
 
 RUN echo "${GID}"
+
+# ENV DEBIAN_FRONTEND noninteractive
+
+# Set environment variables
+ENV PIP_DISABLE_PIP_VERSION_CHECK 1
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
 COPY requirements.txt .
 
