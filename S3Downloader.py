@@ -11,9 +11,11 @@ from utils import create_dir
 BUCKET = 'redial'
 SAVED_MODELS_DIR = "saved_models"
 MAYACHEM_BIN_DIR = "mayachemtools/bin"
+MAYACHEM_LIB_DIR = "mayachemtools/lib"
 SCALERS_DIR = "scalers"
 SMI_ALL_DICT_FILE_NAME = "smi_dict_all_updated_mpro37.pkl"
 script_path = 'mayachemtools/bin/TopologicalPharmacophoreAtomTripletsFingerprints.pl'
+util_file_path = "mayachemtools/lib/FileUtil.pm"
 s3 = boto3.client('s3')
 
 class S3Downloader(metaclass = Singleton):
@@ -33,8 +35,10 @@ class S3Downloader(metaclass = Singleton):
         self.load_scalers()
 
         create_dir(MAYACHEM_BIN_DIR)
+        create_dir(MAYACHEM_LIB_DIR)
 
         self.download_file(script_path)
+        self.download_file(util_file_path)
 
     def load_model_names(self):
         names = []
