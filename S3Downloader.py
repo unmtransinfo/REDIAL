@@ -52,7 +52,7 @@ class S3Downloader(metaclass = Singleton):
 
         self.download_file(ALOGPS_LINUX)
 
-        print("Download complete, server is ready")
+        print("Download complete, server ready")
 
     def load_model_names(self):
         names = []
