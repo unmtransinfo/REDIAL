@@ -48,6 +48,8 @@ class S3Downloader(metaclass = Singleton):
         self.download_dir(MAYACHEM_LIB_DIR)
 
         self.download_file(ALOGPS_LINUX)
+
+        print("Download complete, server is ready")
         # self.download_dir(MAYACHEM_DATA_DIR)
         # self.download_dir(MAYACHEM_DOCS_DIR)
 
@@ -106,10 +108,8 @@ class S3Downloader(metaclass = Singleton):
         for obj in objs['Contents']:
             try:
                 obj_key = obj['Key']
-                print(obj_key)
                 index = obj_key.rfind("/")
                 create_dir(obj_key[:index])
-                print(obj_key[:index])
                 self.download_file(obj_key)
             except Exception as e:
                 print(e)

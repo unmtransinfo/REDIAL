@@ -512,7 +512,8 @@ class OchemAPIResults:
 # USE DOCKER FOR BELOW TASK -->
 class OchemToolALOGPS:
     def calculate_alogps(self, smi):
-
+        permission_cmd = ['chmod', '775', './alogps-linux']
+        os.system(permission_cmd)
         cmd = ['./alogps-linux','--smiles', smi]
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, error = p.communicate()
