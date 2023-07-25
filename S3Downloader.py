@@ -102,4 +102,5 @@ class S3Downloader(metaclass = Singleton):
         for obj in objs['Contents']:
     
             obj_key = obj['Key']
+            print(obj_key)
             self.download_file(obj_key)
