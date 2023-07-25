@@ -48,18 +48,13 @@ class S3Downloader(metaclass = Singleton):
 
         self.download_file(LOGP_FILE)
         self.download_file(LOGS_FILE)
-        
+
         self.download_dir(MAYACHEM_BIN_DIR)
         self.download_dir(MAYACHEM_LIB_DIR)
 
         self.download_file(ALOGPS_LINUX)
 
         print("Download complete, server is ready")
-        # self.download_dir(MAYACHEM_DATA_DIR)
-        # self.download_dir(MAYACHEM_DOCS_DIR)
-
-        # self.download_file(script_path)
-        # self.download_file(util_file_path)
 
     def load_model_names(self):
         names = []
