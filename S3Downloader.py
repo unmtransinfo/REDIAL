@@ -16,6 +16,8 @@ MAYACHEM_DOCS_DIR = "mayachemtools/docs"
 MAYACHEM_DATA_DIR = "mayachemtools/data"
 
 ALOGPS_LINUX = "alogps-linux"
+LOGP_FILE = "logp.bin"
+LOGS_FILE = "logs.bin"
 
 SCALERS_DIR = "scalers"
 SMI_ALL_DICT_FILE_NAME = "smi_dict_all_updated_mpro37.pkl"
@@ -44,6 +46,9 @@ class S3Downloader(metaclass = Singleton):
         create_dir(MAYACHEM_DATA_DIR)
         create_dir(MAYACHEM_DOCS_DIR)
 
+        self.download_file(LOGP_FILE)
+        self.download_file(LOGS_FILE)
+        
         self.download_dir(MAYACHEM_BIN_DIR)
         self.download_dir(MAYACHEM_LIB_DIR)
 
