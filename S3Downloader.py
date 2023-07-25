@@ -103,6 +103,9 @@ class S3Downloader(metaclass = Singleton):
             try:
                 obj_key = obj['Key']
                 print(obj_key)
+                index = obj_key.rfind("/")
+                create_dir(obj_key[:index])
+                print(obj_key[:index])
                 self.download_file(obj_key)
             except Exception as e:
                 print(e)
