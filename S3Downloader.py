@@ -34,11 +34,11 @@ class S3Downloader(metaclass = Singleton):
         self.load_scaler_names()
         self.load_scalers()
 
-        create_dir(MAYACHEM_BIN_DIR)
-        create_dir(MAYACHEM_LIB_DIR)
+        # create_dir(MAYACHEM_BIN_DIR)
+        # create_dir(MAYACHEM_LIB_DIR)
 
-        self.download_file(script_path)
-        self.download_file(util_file_path)
+        # self.download_file(script_path)
+        # self.download_file(util_file_path)
 
     def load_model_names(self):
         names = []
