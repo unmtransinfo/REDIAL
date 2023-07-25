@@ -99,7 +99,7 @@ class S3Downloader(metaclass = Singleton):
 
     def download_dir(self, key):
         objs = s3.list_objects_v2(Bucket = BUCKET, Prefix = key)
-        for obj in objs:
-            print(obj.Contents)
-            obj_key = obj['Contents']['Key']
+        for obj in objs['Contents']:
+    
+            obj_key = obj['Key']
             self.download_file(obj_key)
