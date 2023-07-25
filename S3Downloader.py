@@ -43,8 +43,6 @@ class S3Downloader(metaclass = Singleton):
 
         create_dir(MAYACHEM_BIN_DIR)
         create_dir(MAYACHEM_LIB_DIR)
-        # create_dir(MAYACHEM_DATA_DIR)
-        # create_dir(MAYACHEM_DOCS_DIR)
 
         self.download_file(LOGP_FILE)
         self.download_file(LOGS_FILE)
