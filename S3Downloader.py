@@ -12,6 +12,9 @@ BUCKET = 'redial'
 SAVED_MODELS_DIR = "saved_models"
 MAYACHEM_BIN_DIR = "mayachemtools/bin"
 MAYACHEM_LIB_DIR = "mayachemtools/lib"
+MAYACHEM_DOCS_DIR = "mayachemtools/docs"
+MAYACHEM_DATA_DIR = "mayachemtools/data"
+
 SCALERS_DIR = "scalers"
 SMI_ALL_DICT_FILE_NAME = "smi_dict_all_updated_mpro37.pkl"
 script_path = 'mayachemtools/bin/TopologicalPharmacophoreAtomTripletsFingerprints.pl'
@@ -34,8 +37,15 @@ class S3Downloader(metaclass = Singleton):
         self.load_scaler_names()
         self.load_scalers()
 
-        # create_dir(MAYACHEM_BIN_DIR)
-        # create_dir(MAYACHEM_LIB_DIR)
+        create_dir(MAYACHEM_BIN_DIR)
+        create_dir(MAYACHEM_LIB_DIR)
+        create_dir(MAYACHEM_DATA_DIR)
+        create_dir(MAYACHEM_DOCS_DIR)
+
+        self.download_dir(MAYACHEM_BIN_DIR)
+        self.download_dir(MAYACHEM_LIB_DIR)
+        self.download_dir(MAYACHEM_DATA_DIR)
+        self.download_dir(MAYACHEM_DOCS_DIR)
 
         # self.download_file(script_path)
         # self.download_file(util_file_path)
@@ -86,3 +96,9 @@ class S3Downloader(metaclass = Singleton):
 
     def download_file(self, key):
         s3.download_file(Bucket= BUCKET, Key = key, Filename = key)
+
+    def download_dir(self, key):
+        objs = s3.list_objects_v2(Bucket = BUCKET, Prefix = key)
+        for obj in objs:
+            obj_key = obj['Contents']['Key']
+            self.download_file(obj_key)
