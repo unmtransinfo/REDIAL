@@ -15,6 +15,8 @@ MAYACHEM_LIB_DIR = "mayachemtools/lib"
 MAYACHEM_DOCS_DIR = "mayachemtools/docs"
 MAYACHEM_DATA_DIR = "mayachemtools/data"
 
+ALOGPS_LINUX = "alogps-linux"
+
 SCALERS_DIR = "scalers"
 SMI_ALL_DICT_FILE_NAME = "smi_dict_all_updated_mpro37.pkl"
 script_path = 'mayachemtools/bin/TopologicalPharmacophoreAtomTripletsFingerprints.pl'
@@ -44,6 +46,8 @@ class S3Downloader(metaclass = Singleton):
 
         self.download_dir(MAYACHEM_BIN_DIR)
         self.download_dir(MAYACHEM_LIB_DIR)
+
+        self.download_file(ALOGPS_LINUX)
         # self.download_dir(MAYACHEM_DATA_DIR)
         # self.download_dir(MAYACHEM_DOCS_DIR)
 
