@@ -44,8 +44,8 @@ class S3Downloader(metaclass = Singleton):
 
         self.download_dir(MAYACHEM_BIN_DIR)
         self.download_dir(MAYACHEM_LIB_DIR)
-        self.download_dir(MAYACHEM_DATA_DIR)
-        self.download_dir(MAYACHEM_DOCS_DIR)
+        # self.download_dir(MAYACHEM_DATA_DIR)
+        # self.download_dir(MAYACHEM_DOCS_DIR)
 
         # self.download_file(script_path)
         # self.download_file(util_file_path)
