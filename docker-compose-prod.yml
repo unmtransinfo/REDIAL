@@ -34,25 +34,24 @@ services:
       - main
     volumes:
       # - .:.
-      - ./data/nginx:/etc/nginx/conf.d
-      - /var/secure-api/data/certbot/conf:/etc/letsencrypt
-      - /var/secure-api/data/certbot/www:/var/www/certbot
+      # - ./data/nginx:/etc/nginx/conf.d
+      # - /var/secure-api/data/certbot/conf:/etc/letsencrypt
+      # - /var/secure-api/data/certbot/www:/var/www/certbot
       - ./data/certbot/conf:/etc/letsencrypt
       - ./data/certbot/www:/var/www/certbot
 
   cerbot:
-    build: 
-      context: ./certbot-initial
+    image: certbot/certbot
   # certbot-auto:
   #   build:
   #     context: ./certbot-initial
     volumes:
-      - /var/secure-api/data/certbot/conf:/etc/letsencrypt
-      - /var/secure-api/data/certbot/www:/var/www/certbot 
+      # - /var/secure-api/data/certbot/conf:/etc/letsencrypt
+      # - /var/secure-api/data/certbot/www:/var/www/certbot 
       - ./data/certbot/conf:/etc/letsencrypt
       - ./data/certbot/www:/var/www/certbot
-    env_file:
-      - ./.env-cert.prod
+    # env_file:
+    #   - ./.env-cert.prod
     
 
 # volumes:
