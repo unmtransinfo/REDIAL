@@ -33,7 +33,7 @@ services:
     networks:
       - main
     volumes:
-      - .:.
+      # - .:.
       - /var/secure-api/data/certbot/conf:/etc/letsencrypt
       - /var/secure-api/data/certbot/www:/var/www/certbot
 
