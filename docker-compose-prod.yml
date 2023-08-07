@@ -34,7 +34,7 @@ services:
       - main
     volumes:
       - .:.
-      - /etc/letsencrypt:/etc/letsencrypt
+      - /letsencrypt:/etc/letsencrypt
       - /var/secure-api/data/certbot/conf:/etc/letsencrypt
       - /var/secure-api/data/certbot/www:/var/www/certbot
 
