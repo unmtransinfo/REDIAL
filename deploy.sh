@@ -20,4 +20,14 @@ docker run -it --rm --name certbot \
     -d $DNSNAME \
     --server https://acme-v02.api.letsencrypt.org/directory
 
+until curl --silent http://app:8000/health; do
+    echo "App not yet healthy. Waiting ...";
+    sleep 1s;
+done
+
+curl -v http://app:8000/health
+echo "App healthy. Starting nginx...";
+
+# bash docker-entrypoint.sh nginx -g "daemon off;"
+
 docker-compose -f docker-compose-prod.yml --env-file .env.prod up --build -d
