@@ -5,4 +5,4 @@ docker-compose -f docker-compose-prod-init.yml --env-file .env-cert.prod up --bu
 
 echo "Initialization complete!"
 
-docker-compose -f docker-compose-prod.yml --env-file .env.prod up --build -d
+docker-compose -f docker-compose-prod.yml --env-file .env.prod up --build
