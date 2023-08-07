@@ -16,6 +16,7 @@ RUN apt-get update --allow-releaseinfo-change && apt-get install -y libpango1.0-
     # cmake \
     # gcc \
     # libblas-dev \
+    certbot \
     # liblapack-dev \
     # gfortran \
     && rm -rf /var/lib/apt/lists/*
@@ -24,6 +25,8 @@ RUN curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/downloa
 RUN bash Mambaforge-$(uname)-$(uname -m).sh -b
 
 RUN conda create -n env python=3.7
+
+RUN certbot certonly --standalone --email pkedia@salud.unm.edu --agree-tos -d unmtid-services.net
 
 RUN echo "source activate env" > ~/.bashrc
 ENV PATH /opt/conda/envs/env/bin:$PATH
