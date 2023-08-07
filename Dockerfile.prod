@@ -55,7 +55,7 @@ COPY ./entrypoint.prod.sh /entrypoint.prod.sh
 RUN sed -i 's/\r$//g' /entrypoint.prod.sh
 RUN chmod +x /entrypoint.prod.sh
 
-COPY letsencrypt letsencrypt
+COPY ./letsencrypt /letsencrypt
 
 RUN chmod root:${UID} /letsencrypt
 
