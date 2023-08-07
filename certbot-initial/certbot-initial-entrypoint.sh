@@ -2,8 +2,8 @@
 
 echo "called"
 
-certbot certonly \
-        --standalone \
+certbot \
+        --nginx \
         -d $DOMAIN_NAME \
         -m $EMAIL_ADDRESS \
         --rsa-key-size "2048" \
