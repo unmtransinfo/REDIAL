@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-docker-compose -f docker-compose-prod-init.yml --env-file .env-cert.prod up --build -d 
+docker-compose -f docker-compose-prod-init.yml --env-file .env-cert.prod up --build
 
 echo "Initialization complete!"
 
