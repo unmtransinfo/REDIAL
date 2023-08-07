@@ -3,7 +3,7 @@
 echo "called"
 
 certbot certonly   \
-        --standalone \
+        --webroot \
         -d $DOMAIN_NAME \
         -m $EMAIL_ADDRESS \
         --rsa-key-size "2048" \
