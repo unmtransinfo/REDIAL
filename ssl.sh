@@ -16,4 +16,5 @@ docker run -it --rm --name certbot \
     --keep-until-expiring \
     --agree-tos \
     -d $DNSNAME \
-    --server https://acme-v02.api.letsencrypt.org/directory
+    --server https://acme-staging-v02.api.letsencrypt.org/directory
+    --staging
