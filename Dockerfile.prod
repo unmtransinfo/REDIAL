@@ -26,7 +26,7 @@ RUN bash Mambaforge-$(uname)-$(uname -m).sh -b
 
 RUN conda create -n env python=3.7
 
-RUN certbot certonly --standalone --email pkedia@salud.unm.edu --agree-tos -d unmtid-services.net
+# RUN certbot certonly --standalone --email pkedia@salud.unm.edu --agree-tos -d unmtid-services.net --server https://acme-staging-v02.api.letsencrypt.org/directory --staging --force-interactive
 
 RUN echo "source activate env" > ~/.bashrc
 ENV PATH /opt/conda/envs/env/bin:$PATH
@@ -49,7 +49,7 @@ COPY requirements.txt .
 
 # RUN conda install cython
 RUN python3 -m pip install --upgrade pip
-# RUN pip install -r requirements.txt
+RUN pip install -r requirements.txt
 WORKDIR /app
 EXPOSE 8000
 
