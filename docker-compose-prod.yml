@@ -14,7 +14,7 @@ services:
       # - media_vol:/app/media
       # - .:.
       - ~/.aws/:/root/.aws:ro
-      - /var/www/html:/var/www/html
+      - /var/www/dns:/var/www/dns
     ports:
       - "8000:8000"
     env_file:
@@ -40,18 +40,18 @@ services:
       - ./data/certbot/conf:/etc/letsencrypt
       - ./data/certbot/www:/var/www/certbot
 
-  cerbot:
-    image: certbot/certbot
-  # certbot-auto:
-  #   build:
-  #     context: ./certbot-initial
-    volumes:
-      # - /var/secure-api/data/certbot/conf:/etc/letsencrypt
-      # - /var/secure-api/data/certbot/www:/var/www/certbot 
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
-    # env_file:
-    #   - ./.env-cert.prod
+  # cerbot:
+  #   image: certbot/certbot
+  # # certbot-auto:
+  # #   build:
+  # #     context: ./certbot-initial
+  #   volumes:
+  #     # - /var/secure-api/data/certbot/conf:/etc/letsencrypt
+  #     # - /var/secure-api/data/certbot/www:/var/www/certbot 
+  #     - ./data/certbot/conf:/etc/letsencrypt
+  #     - ./data/certbot/www:/var/www/certbot
+  #   # env_file:
+  #   #   - ./.env-cert.prod
     
 
 # volumes:
