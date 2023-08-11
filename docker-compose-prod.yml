@@ -24,14 +24,15 @@ services:
       - main
 
   nginx:
-    image: nginx:1.15-alpine
+    build: ./nginx
+    # volumes:
+    #   - .:.
+
     ports:
       - "80:80"
       - "443:443"
     depends_on:
       - app
-    # networks:
-    #   - main
     volumes:
       # - .:.
       - ./data/nginx:/etc/nginx/conf.d
