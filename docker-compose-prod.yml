@@ -14,6 +14,7 @@ services:
       # - media_vol:/app/media
       # - .:.
       - ~/.aws/:/root/.aws:ro
+      - /var/www/dns:/var/www/dns
     ports:
       - "8000:8000"
     env_file:
