@@ -32,6 +32,8 @@ services:
       - "80:80"
     depends_on:
       - app
+    volumes:
+      - /etc/letsencrypt/:/etc/letsencrypt:ro
 
 # volumes:
   # static_vol:
