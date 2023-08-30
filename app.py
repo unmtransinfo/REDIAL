@@ -592,7 +592,8 @@ def predict():
                         logp = s[s.find('logP:') + len('logP:'):s.find('(', s.find('logP:') + len('logP:'))]
                         logs = s[s.find('logS:') + len('logS:'):s.find('(', s.find('logS:') + len('logS:'))]
 
-                except:
+                except Exception as e:
+                    print(e)
                     logp = 'script_error'
                     logs = 'script_error'
             ######################################

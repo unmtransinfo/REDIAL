@@ -11,9 +11,18 @@ from utils import create_dir
 BUCKET = 'redial'
 SAVED_MODELS_DIR = "saved_models"
 MAYACHEM_BIN_DIR = "mayachemtools/bin"
+MAYACHEM_LIB_DIR = "mayachemtools/lib"
+MAYACHEM_DOCS_DIR = "mayachemtools/docs"
+MAYACHEM_DATA_DIR = "mayachemtools/data"
+
+ALOGPS_LINUX = "alogps-linux"
+LOGP_FILE = "logp.bin"
+LOGS_FILE = "logs.bin"
+
 SCALERS_DIR = "scalers"
 SMI_ALL_DICT_FILE_NAME = "smi_dict_all_updated_mpro37.pkl"
 script_path = 'mayachemtools/bin/TopologicalPharmacophoreAtomTripletsFingerprints.pl'
+util_file_path = "mayachemtools/lib/FileUtil.pm"
 s3 = boto3.client('s3')
 
 class S3Downloader(metaclass = Singleton):
@@ -33,8 +42,17 @@ class S3Downloader(metaclass = Singleton):
         self.load_scalers()
 
         create_dir(MAYACHEM_BIN_DIR)
+        create_dir(MAYACHEM_LIB_DIR)
 
-        self.download_file(script_path)
+        self.download_file(LOGP_FILE)
+        self.download_file(LOGS_FILE)
+
+        self.download_dir(MAYACHEM_BIN_DIR)
+        self.download_dir(MAYACHEM_LIB_DIR)
+
+        self.download_file(ALOGPS_LINUX)
+
+        print("Download complete, server ready")
 
     def load_model_names(self):
         names = []
@@ -82,3 +100,14 @@ class S3Downloader(metaclass = Singleton):
 
     def download_file(self, key):
         s3.download_file(Bucket= BUCKET, Key = key, Filename = key)
+
+    def download_dir(self, key):
+        objs = s3.list_objects_v2(Bucket = BUCKET, Prefix = key)
+        for obj in objs['Contents']:
+            try:
+                obj_key = obj['Key']
+                index = obj_key.rfind("/")
+                create_dir(obj_key[:index])
+                self.download_file(obj_key)
+            except Exception as e:
+                print(e)
