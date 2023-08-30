@@ -16,7 +16,7 @@ services:
       # - media_vol:/app/media
       # - .:.
       - ~/.aws/:/root/.aws:ro
-      - /etc/letsencrypt/:/root/etc/letsencrypt:ro
+      - /etc/letsencrypt/:/etc/letsencrypt:ro
       # - /var/www/dns:/var/www/dns
     ports:
       - "8000:8000"
